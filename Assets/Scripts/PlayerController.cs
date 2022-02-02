@@ -5,19 +5,47 @@ using UnityEngine.UI;
 
 public class PlayerController : CharacterController
 {
+ 
+    [SerializeField] private statsController health,mana;
     
-    void Start()
+    protected  override void Start()
     {
+       
+        base.Start();
+       health.initialize1(100,100);
+       mana.initialize1(100,100);
+       
         
     }
     protected override void Update()
     {
         getInput();
+        
         base.Update();
     }
     private void getInput()
     {
-         direction = Vector2.zero;
+       
+        if (Input.GetKey(KeyCode.I))
+        {
+
+            health.MyCurrentValue -= 10;
+          mana.MyCurrentValue -= 10;
+
+
+        }
+
+        if (Input.GetKey(KeyCode.O))
+        {
+            
+                health.MyCurrentValue += 10;
+               mana.MyCurrentValue+= 10;
+
+        }
+
+        
+        
+        direction = Vector2.zero;
         if (Input.GetKey(KeyCode.W))
         {
             direction = Vector2.up;
