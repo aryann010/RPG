@@ -9,11 +9,13 @@ public class PlayerController : CharacterController
    [SerializeField] private GameObject[] spellPrefabs;
     [SerializeField] private statsController health,mana;
     [SerializeField] private Transform[] exitPoints;
+    [SerializeField] private SightBlock[] blocks;
+    private Transform target;
     private int exitIndex=2;
     
     protected  override void Start()
     {
-       
+        target = GameObject.Find("target").transform;
         base.Start();
        health.initialize1(100,100);
        mana.initialize1(100,100);
@@ -23,7 +25,6 @@ public class PlayerController : CharacterController
     protected override void Update()
     {
         getInput();
-        
         base.Update();
     }
     private void getInput()
@@ -85,9 +86,11 @@ public class PlayerController : CharacterController
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            SightBlock();
             if (Weapon == 1)
             {
-                if (!isThunderCast && !isMoving)
+                
+                if (!isThunderCast && !isMoving && inLineOfSight())
                 {
                     attackRoutine = StartCoroutine(ThunderAttack());
                 }
@@ -112,6 +115,27 @@ public class PlayerController : CharacterController
     public void caseThunderSpell()
     {
         Instantiate(spellPrefabs[0],exitPoints[exitIndex].position, quaternion.identity); 
+    }
+
+    private bool inLineOfSight()
+    {
+        Vector2 targetDirection = target.transform.position - transform.position;
+        RaycastHit2D hit = Physics2D.Raycast(transform.position,targetDirection,Vector2.Distance(transform.position,target.transform.position),256);
+        if (hit.collider==null)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    private void SightBlock()
+    {
+        foreach (SightBlock b in blocks)
+        {
+            b.deactivate();
+            
+        }
+        blocks[exitIndex].activate();
     }
  
 }
