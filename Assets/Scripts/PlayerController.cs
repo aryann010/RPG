@@ -43,6 +43,16 @@ public class PlayerController : CharacterController
 
         }
 
+        if (Input.GetKey(KeyCode.E))
+        {
+            Weapon = 1;
+        }
+
+        if (Input.GetKey(KeyCode.R))
+        {
+            Weapon = 0;
+        }
+
         
         
         direction = Vector2.zero;
@@ -65,9 +75,29 @@ public class PlayerController : CharacterController
         {
             direction=Vector2.right;
         }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (Weapon == 1)
+            {
+              attackRoutine= StartCoroutine(ThunderAttack());
+            }
+        }
     }
 
-   
 
+    private IEnumerator ThunderAttack()
+    {
+        if (!isThunderCast && !isMoving)
+        {
+            isThunderCast = true;
+            animator.SetBool("attack", isThunderCast);
+            yield return new WaitForSeconds(5);
+            animator.SetBool("attackFurther", isThunderCast);
+            yield return new WaitForSeconds(1);
+            stopAttack();
+        }
+
+    }
  
 }
