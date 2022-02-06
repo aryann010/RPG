@@ -5,11 +5,15 @@ using UnityEngine;
 
 public abstract class CharactersController : MonoBehaviour
 {
+   
+    
     protected Animator animator;
     protected bool isFireAttack = false,isIceAttack=false,isSwordAttack=false;
     private Rigidbody2D rgb;
     protected Coroutine fireAttackRoutine,swordAttackRoutine,iceAttackRoutine;
     protected int Weapon = 0;
+    [SerializeField]
+    protected Transform hitBox;
   
   
     public bool isMoving

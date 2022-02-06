@@ -11,6 +11,7 @@ public class PlayerController : CharactersController
     [SerializeField] private statsController health,mana;
     [SerializeField] private Transform[] exitPoints;
     [SerializeField] private SightBlock[] blocks;
+    private Transform currentTarget;
 
 
     
@@ -97,11 +98,16 @@ public class PlayerController : CharactersController
         }
     private IEnumerator FireAttack()
     {
+        currentTarget = target;
         isFireAttack = true;
             animator.SetBool("attack", isFireAttack);
-            yield return new WaitForSeconds(5);
-         SpellController spell=   Instantiate(spellPrefabs[0],exitPoints[exitIndex].position, quaternion.identity).GetComponent<SpellController>();
-         spell.target = target;  
+            yield return new WaitForSeconds(2);
+            if (currentTarget != null && inLineOfSight())
+            {
+                SpellController spell=   Instantiate(spellPrefabs[0],exitPoints[exitIndex].position, quaternion.identity).GetComponent<SpellController>();
+                spell.target = currentTarget;  
+
+            }
          animator.SetBool("attackFurther", isFireAttack);
             yield return new WaitForSeconds(1);
             stopAttack();
@@ -109,11 +115,16 @@ public class PlayerController : CharactersController
 
     private IEnumerator IceAttack()
     {
+        currentTarget = target;
         isIceAttack = true;
         animator.SetBool("attack", isIceAttack);
-        yield return new WaitForSeconds(5);
-        SpellController spell=   Instantiate(spellPrefabs[1],exitPoints[exitIndex].position, quaternion.identity).GetComponent<SpellController>();
-        spell.target = target;  
+        yield return new WaitForSeconds(2);
+        if (currentTarget != null && inLineOfSight())
+        {
+            SpellController spell=   Instantiate(spellPrefabs[1],exitPoints[exitIndex].position, quaternion.identity).GetComponent<SpellController>();
+            spell.target = currentTarget;
+        }
+          
         animator.SetBool("attackFurther", isIceAttack);
         yield return new WaitForSeconds(1);
         stopIceAttack();
