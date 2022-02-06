@@ -3,17 +3,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public abstract class CharacterController : MonoBehaviour
+public abstract class CharactersController : MonoBehaviour
 {
     protected Animator animator;
-    protected bool isThunderCast = false;
+    protected bool isFireAttack = false,isIceAttack=false,isSwordAttack=false;
     private Rigidbody2D rgb;
-    protected Coroutine attackRoutine;
+    protected Coroutine fireAttackRoutine,swordAttackRoutine,iceAttackRoutine;
     protected int Weapon = 0;
+  
+  
     public bool isMoving
     {
         get { return direction.x != 0 || direction.y != 0; }
     }
+    
     [SerializeField] private float speed;
     protected Vector2 direction;
     
@@ -21,6 +24,7 @@ public abstract class CharacterController : MonoBehaviour
     {
         rgb = GetComponent<Rigidbody2D>();
          animator = GetComponent<Animator>();
+         
      }
 
     protected virtual void Update()
@@ -47,11 +51,21 @@ public abstract class CharacterController : MonoBehaviour
             animator.SetFloat("vertical", direction.y);
             stopAttack();
         }
-        else if (Weapon==1&&isThunderCast)
+        else if (Weapon==1&&isFireAttack)
         {
             
-            activateLayer("ThunderCast");
+            activateLayer("FireAttack");
             
+            
+        }
+        else if(Weapon==1 && isIceAttack)
+        {
+            activateLayer("IceAttack");
+           
+        }
+        else if (Weapon == 1 && isSwordAttack)
+        {
+            activateLayer("SwordAttack");
         }
        else if (isMoving)
         {
@@ -85,12 +99,34 @@ public abstract class CharacterController : MonoBehaviour
 
     public void stopAttack()
     {
-        if (attackRoutine != null)
+        if (fireAttackRoutine != null)
         {
-            StopCoroutine(attackRoutine);
-            isThunderCast = false;
-            animator.SetBool("attack", isThunderCast);
-            animator.SetBool("attackFurther", isThunderCast);
+            
+            StopCoroutine(fireAttackRoutine);
+            isFireAttack = false;
+            animator.SetBool("attack", isFireAttack);
+            animator.SetBool("attackFurther", isFireAttack);
+        }
+    }
+    public void stopSwordAttack()
+    {
+        if (swordAttackRoutine != null)
+        {
+            StopCoroutine( swordAttackRoutine);
+            isSwordAttack = false;
+            animator.SetBool("attack", isSwordAttack);
+
+        }
+    }
+    public void stopIceAttack()
+    {
+        if (iceAttackRoutine != null)
+        {
+            StopCoroutine(iceAttackRoutine);
+            isIceAttack = false;
+           animator.SetBool("attack", isIceAttack);
+            
+            animator.SetBool("attackFurther", isIceAttack);
         }
     }
 }

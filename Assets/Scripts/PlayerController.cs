@@ -4,23 +4,29 @@ using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PlayerController : CharacterController
+public class PlayerController : CharactersController
 {
+   
    [SerializeField] private GameObject[] spellPrefabs;
     [SerializeField] private statsController health,mana;
     [SerializeField] private Transform[] exitPoints;
     [SerializeField] private SightBlock[] blocks;
-    private Transform target;
+
+
+    
+    public Transform target { get; set; }
     private int exitIndex=2;
     
+   
     protected  override void Start()
     {
-        target = GameObject.Find("target").transform;
+        
         base.Start();
        health.initialize1(100,100);
        mana.initialize1(100,100);
-       
-        
+
+     
+     
     }
     protected override void Update()
     {
@@ -86,39 +92,90 @@ public class PlayerController : CharacterController
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            SightBlock();
-            if (Weapon == 1)
+            swordAttack();
+        }
+        }
+    private IEnumerator FireAttack()
+    {
+        isFireAttack = true;
+            animator.SetBool("attack", isFireAttack);
+            yield return new WaitForSeconds(5);
+         SpellController spell=   Instantiate(spellPrefabs[0],exitPoints[exitIndex].position, quaternion.identity).GetComponent<SpellController>();
+         spell.target = target;  
+         animator.SetBool("attackFurther", isFireAttack);
+            yield return new WaitForSeconds(1);
+            stopAttack();
+    }
+
+    private IEnumerator IceAttack()
+    {
+        isIceAttack = true;
+        animator.SetBool("attack", isIceAttack);
+        yield return new WaitForSeconds(5);
+        SpellController spell=   Instantiate(spellPrefabs[1],exitPoints[exitIndex].position, quaternion.identity).GetComponent<SpellController>();
+        spell.target = target;  
+        animator.SetBool("attackFurther", isIceAttack);
+        yield return new WaitForSeconds(1);
+        stopIceAttack();
+   
+
+    }
+
+    private IEnumerator SwordAttack(){
+       
+         isSwordAttack = true;
+        animator.SetBool("attack",isSwordAttack);
+        yield return new WaitForSeconds(1);
+        stopSwordAttack();
+    }
+
+    public void swordAttack()
+    {
+        SightBlock();
+        if (Weapon == 1)
+        {
+               
+            if (target!=null && !isSwordAttack && !isMoving && inLineOfSight())
             {
-                
-                if (!isThunderCast && !isMoving && inLineOfSight())
-                {
-                    attackRoutine = StartCoroutine(ThunderAttack());
-                }
+               
+                swordAttackRoutine = StartCoroutine(SwordAttack());
             }
         }
     }
 
-
-    private IEnumerator ThunderAttack()
+    public void iceAttack()
     {
-        isThunderCast = true;
-            animator.SetBool("attack", isThunderCast);
-            yield return new WaitForSeconds(5);
-            caseThunderSpell();
-            animator.SetBool("attackFurther", isThunderCast);
-            yield return new WaitForSeconds(1);
-            stopAttack();
-        
-
+        SightBlock();
+        if (Weapon == 1)
+        {
+               
+            if (target!=null && !isIceAttack && !isMoving && inLineOfSight())
+            {
+               
+                iceAttackRoutine = StartCoroutine(IceAttack());
+            }
+        }
     }
-
-    public void caseThunderSpell()
+    public void fireAttack()
     {
-        Instantiate(spellPrefabs[0],exitPoints[exitIndex].position, quaternion.identity); 
+        
+        SightBlock();
+        if (Weapon == 1)
+        {
+
+           
+            if (target!=null && !isFireAttack && !isMoving && inLineOfSight())
+            {
+                
+                fireAttackRoutine = StartCoroutine(FireAttack());
+            }
+        }
+        
     }
 
     private bool inLineOfSight()
     {
+        
         Vector2 targetDirection = target.transform.position - transform.position;
         RaycastHit2D hit = Physics2D.Raycast(transform.position,targetDirection,Vector2.Distance(transform.position,target.transform.position),256);
         if (hit.collider==null)
