@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class EnemyController : NPC
 {
+    private Transform target;
     [SerializeField] private CanvasGroup healthGroup;
+   // [SerializeField] private statsController enemyHealth;
 
     public override Transform select()
     {
@@ -16,5 +18,9 @@ public class EnemyController : NPC
     {
         healthGroup.alpha = 0;
         base.deSelect();
+    }
+    public void takeDamage(float dmg)
+    {
+
     }
 }

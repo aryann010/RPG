@@ -8,6 +8,10 @@ TagManager:
   - mana
   - enemy
   - hitBox
+  - eHealth
+  - player
+  - seer
+  - elxir
   layers:
   - Default
   - TransparentFX

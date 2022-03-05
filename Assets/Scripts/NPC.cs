@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NPC : CharactersController
+public class NPC : PlayerView
 {
    
 
