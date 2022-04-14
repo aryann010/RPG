@@ -6,4 +6,5 @@ https://user-images.githubusercontent.com/68263617/163317659-25757d09-3851-4708-
 
 
 -Ongoing RPG 2D project.
-- Inventory system with 3 chapters for storyline
+
+-Inventory system with 3 chapters for storyline.
